@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.shadow)
+
+}
+
+group = 'dev.m7mqd'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
+    maven {
+        url = uri("https://jitpack.io")
+    }
+}
+
+dependencies {
+    implementation libs.lotus
+    implementation libs.hikariCp
+    implementation libs.mariaDb
+    compileOnly libs.paper
+}
+tasks {
+    shadowJar {
+        def reloc = { String pkg ->
+            relocate(pkg, "${project.group}.libs.${pkg}")
+        }
+//        archiveClassifier.set("")
+        reloc("io.github")
+        dependencies {
+            exclude("META-INF/NOTICE")
+            exclude("META-INF/maven/**")
+            exclude("META-INF/versions/**")
+            exclude("META-INF/**.kotlin_module")
+        }
+    }
+    build {
+        dependsOn(shadowJar)
+    }
+}

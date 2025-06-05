@@ -1,0 +1,19 @@
+[versions]
+# Libraries
+paper = "1.20.4-R0.1-SNAPSHOT"
+hikariCp = "5.0.0"
+lotus = "1.4.4b"
+mariaDb = "3.5.1"
+# Plugins
+shadow = "8.3.0"
+[libraries]
+paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikariCp"}
+lotus = { module = "com.github.Mqzn:Lotus", version.ref = "lotus"}
+mariaDb = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariaDb"}
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+
+
+
