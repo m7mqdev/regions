@@ -32,7 +32,7 @@ public class RemoveCommand extends SubCommand {
         }
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-            region.getWhitelisted().remove(target.getUniqueId());
+            region.removeWhitelisted(target.getUniqueId());
             Messenger.send(sender, "<green>Removed <player> from region <region>.",
                     Placeholder.unparsed("player", args[1]),
                     Placeholder.unparsed("region", args[0]));

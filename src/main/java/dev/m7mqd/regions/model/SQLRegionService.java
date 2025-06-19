@@ -7,7 +7,6 @@ import dev.m7mqd.regions.flag.FlagService;
 import dev.m7mqd.regions.flag.FlagState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 
 import java.nio.file.Files;

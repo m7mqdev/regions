@@ -91,7 +91,7 @@ public class Region {
         this.whitelisted.remove(uuid);
     }
 
-    public void setName(String input) {
-        this.name = name;
+    protected void setName(String input) {
+        this.name = input;
     }
 }

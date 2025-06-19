@@ -38,7 +38,7 @@ public class RegionsPlugin extends JavaPlugin {
         this.regionService = new SQLRegionService(this, flagService);
         this.selectionService = new SelectionService(this);
         this.wandService = new WandService(this, selectionService);
-        this.regionActionService = new RegionActionService(this);
+        this.regionActionService = new RegionActionService(this, this.regionService);
         this.defaultFlagService = new DefaultFlagService(regionService, flagService, this);
         this.menuService = new MenuService(this, regionService, regionActionService, flagService);
     }

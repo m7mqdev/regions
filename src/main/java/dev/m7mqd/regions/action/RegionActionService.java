@@ -1,6 +1,7 @@
 package dev.m7mqd.regions.action;
 
 import dev.m7mqd.regions.model.Region;
+import dev.m7mqd.regions.model.RegionService;
 import dev.m7mqd.regions.utils.Messenger;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
@@ -16,15 +17,31 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RegionActionService implements Listener {
-
+    private final Plugin plugin;
+    private final RegionService regionService;
     private final Map<UUID, ActionEntry> actionMap = new ConcurrentHashMap<>();
 
-    public RegionActionService(Plugin plugin){
+    public RegionActionService(Plugin plugin, RegionService regionService){
+        this.regionService = regionService;
+        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     public void add(Player player, RegionAction action, Region region) {
-        actionMap.put(player.getUniqueId(), new ActionEntry(action, region));
+        final ActionEntry actionEntry = new ActionEntry(action, region);
+        final UUID id = player.getUniqueId();
+        actionMap.put(id, actionEntry);
         Messenger.send(player, "<yellow>Type the value in chat to complete the action.");
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            ActionEntry current = this.actionMap.get(id);
+            if(current == actionEntry){
+                this.actionMap.remove(id);
+                if(!player.isOnline()) return;
+                Messenger.send(player, "<red>Region action expired.");
+
+            }
+
+        }, 20*60); //action expires after 1 minute
+
     }
 
     @EventHandler
@@ -42,7 +59,7 @@ public class RegionActionService implements Listener {
 
         switch (entry.action) {
             case RENAME -> {
-                region.setName(input);
+                regionService.updateName(region, input);
                 Messenger.send(player, "<green>Region renamed to <white>" + input + "</white>.");
             }
             case WHITELIST_ADD -> {

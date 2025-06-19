@@ -37,6 +37,11 @@ public abstract class RegionService {
         }
         return null;
     }
+    public void updateName(Region region, String name){
+        this.regions.remove(region.getName());
+        this.regions.put(name, region);
+        region.setName(name);
+    }
     public Map<String, Region> getRegions() {
         return Collections.unmodifiableMap(regions);
     }

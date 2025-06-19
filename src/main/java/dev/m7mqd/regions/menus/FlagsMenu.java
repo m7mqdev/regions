@@ -72,22 +72,27 @@ public class FlagsMenu implements Menu {
             case WHITELISTED -> Material.YELLOW_DYE;
         };
 
-        String displayName = "<white>" + flag.toKey().toString() + ": <green>" + currentState.name();
-
+        String displayName = "<blue><bold>" + flag.toKey().toString() + "</bold><white>: <green>" + currentState.name();
+        FlagState next = switch (currentState) {
+            case EVERYONE -> WHITELISTED;
+            case WHITELISTED -> NONE;
+            case NONE -> EVERYONE;
+        };
         return Button.transformerButton(
                 ItemBuilder.modern(displayMaterial)
                         .setDisplay(MiniMessage.miniMessage().deserialize(displayName))
-                        .setLore(MiniMessage.miniMessage().deserialize("<gray>Click to cycle state"))
+                        .setLore(MiniMessage.miniMessage().deserialize("<reset><gray>Click to cycle state"), MiniMessage.miniMessage().deserialize("<reset><green>Next is: " + next.name()))
                         .build(),
                 (view, click) -> {
+                    click.setCancelled(true);
                     FlagState current = region.getFlagState(flag);
                     if(current == null) current = NONE;
-                    FlagState next = switch (current) {
+                    FlagState nextState = switch (current) {
                         case EVERYONE -> WHITELISTED;
                         case WHITELISTED -> NONE;
                         case NONE -> EVERYONE;
                     };
-                    region.setFlagState(flag, next);
+                    region.setFlagState(flag, nextState);
                     return createFlagButton(region, flag); // reuses same logic
                 }
         );
